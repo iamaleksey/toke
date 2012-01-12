@@ -448,13 +448,6 @@ int toke_set_xm_size(TokeData *const td, Reader *const reader,
     ((tchdbsetxmsiz(td->hdb, *xmsize)) ? OK : TOKYO_ERROR) : READER_ERROR;
 }
 
-int toke_set_df_unit(TokeData *const td, Reader *const reader,
-                     const ErlDrvPort port) {
-  const int32_t *dfunit = NULL;
-  return (read_int32(reader, &dfunit)) ?
-    ((tchdbsetdfunit(td->hdb, *dfunit)) ? OK : TOKYO_ERROR) : READER_ERROR;
-}
-
 int toke_open(TokeData *const td, Reader *const reader, const ErlDrvPort port) {
   const char *path = NULL;
   const uint64_t *path_len = NULL;
@@ -655,10 +648,6 @@ static void toke_outputv(ErlDrvData drv_data, ErlIOVec *const ev) {
 
     case TOKE_SET_XM_SIZE:
       toke_with_hdb(td, &spec, &reader, port, toke_set_xm_size);
-      break;
-
-    case TOKE_SET_DF_UNIT:
-      toke_with_hdb(td, &spec, &reader, port, toke_set_df_unit);
       break;
 
     case TOKE_OPEN:

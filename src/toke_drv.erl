@@ -19,7 +19,7 @@
 
 -export([start_link/0]).
 
--export([new/1, delete/1, tune/5, set_cache/2, set_xm_size/2, set_df_unit/2,
+-export([new/1, delete/1, tune/5, set_cache/2, set_xm_size/2,
          open/3, close/1, insert/3, insert_new/3, insert_concat/3,
          insert_async/3, delete/2, delete_if_value_eq/3, get/2, fold/3,
          update_atomically/3, stop/1]).
@@ -42,7 +42,6 @@
 -define(TOKE_TUNE,          2).
 -define(TOKE_SET_CACHE,     3).
 -define(TOKE_SET_XM_SIZE,   4).
--define(TOKE_SET_DF_UNIT,   5).
 -define(TOKE_OPEN,          6).
 -define(TOKE_CLOSE,         7).
 -define(TOKE_INSERT,        8).
@@ -87,10 +86,6 @@ set_cache(Pid, RecordsToCache) ->
 %% Set the extra amount of memory mapped in. Don't do this after opening the db.
 set_xm_size(Pid, ExtraMappedMemory) ->
     gen_server:call(Pid, {set_xm_size, ExtraMappedMemory}, infinity).
-
-%% Set the steps between auto defrag. Don't do this after opening the db.
-set_df_unit(Pid, DefragStepUnit) ->
-    gen_server:call(Pid, {set_df_unit, DefragStepUnit}, infinity).
 
 %% Open a db. Modes :: [ read, write, create, truncate, no_lock,
 %%                       lock_no_block, sync_on_transaction ]
@@ -185,12 +180,6 @@ handle_call({set_cache, RecordCacheNum}, _From, Port) ->
 handle_call({set_xm_size, ExtraMappedMemory}, _From, Port) ->
     port_command(Port, <<?TOKE_SET_XM_SIZE/native,
                         ExtraMappedMemory:64/signed-integer-native>>),
-    simple_reply(Port);
-
-%% int32_t dfunit
-handle_call({set_df_unit, DefragStepUnit}, _From, Port) ->
-    port_command(Port, <<?TOKE_SET_DF_UNIT/native,
-                        DefragStepUnit:32/signed-integer-native>>),
     simple_reply(Port);
 
 handle_call({open, Path, Modes}, _From, Port) ->

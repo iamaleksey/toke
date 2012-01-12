@@ -27,7 +27,6 @@ enum _CommandType {
   TOKE_TUNE            = 2,
   TOKE_SET_CACHE       = 3,
   TOKE_SET_XM_SIZE     = 4,
-  TOKE_SET_DF_UNIT     = 5,
   TOKE_OPEN            = 6,
   TOKE_CLOSE           = 7,
   TOKE_INSERT          = 8,
