@@ -17,7 +17,6 @@
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 
-#include <erl_driver.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stddef.h>
@@ -29,6 +28,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "erl_driver.h"
 #include "toke.h"
 
 #define FALSE                  0
@@ -71,7 +71,7 @@ uint8_t toke_invalid_command = TOKE_INVALID_COMMAND;
 
 /* only used in debugging */
 void dump_ev(const ErlIOVec *const ev) {
-  printf("total size: %d\r\nvec len: %d\r\n", ev->size, ev->vsize);
+  printf("total size: %d\r\nvec len: %d\r\n", (int) ev->size, ev->vsize);
   int idx;
   for (idx = 0; idx < ev->vsize; ++idx) {
     printf("iov[%d] = ", idx);
@@ -195,7 +195,7 @@ void return_tokyo_error(TokeData *const td, const ErlDrvPort port,
   }
 }
 
-static int toke_init() {
+static int toke_init(void) {
   no_command_atom_spec =
     (ErlDrvTermData*)driver_alloc(ATOM_SPEC_LEN * sizeof(ErlDrvTermData));
 
